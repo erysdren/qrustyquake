@@ -62,6 +62,17 @@ keyname_t keynames[] = {
 
 	{ "MWHEELUP", K_MWHEELUP }, { "MWHEELDOWN", K_MWHEELDOWN },
 
+	// erysdren: gamepad support
+	{ "A", K_GP_A }, { "B", K_GP_B }, { "X", K_GP_X }, { "Y", K_GP_Y },
+	{ "BACK", K_GP_BACK }, { "GUIDE", K_GP_GUIDE }, { "START", K_GP_START },
+	{ "LSTICK", K_GP_LEFTSTICK }, { "RSTICK", K_GP_RIGHTSTICK },
+	{ "LSHOULDER", K_GP_LEFTSHOULDER }, { "RSHOULDER", K_GP_RIGHTSHOULDER },
+	{ "UP", K_GP_DPAD_UP }, { "DOWN", K_GP_DPAD_DOWN },
+	{ "LEFT", K_GP_DPAD_LEFT }, { "RIGHT", K_GP_DPAD_RIGHT },
+	{ "MISC", K_GP_MISC1 }, { "PADDLE1", K_GP_PADDLE1 },
+	{ "PADDLE2", K_GP_PADDLE2 }, { "PADDLE3", K_GP_PADDLE3 },
+	{ "PADDLE4", K_GP_PADDLE4 }, { "TOUCHPAD", K_GP_TOUCHPAD },
+
 	{ "SEMICOLON", ';' }, // because a raw semicolon seperates commands
 
 	{ NULL, 0 }
