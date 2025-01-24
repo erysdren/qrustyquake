@@ -238,6 +238,7 @@ void IN_Shutdown()
 	mouse_avail = 0;
 	if (controller)
 		SDL_GameControllerClose(controller);
+	controller = NULL;
 }
 
 void IN_Commands()
