@@ -79,12 +79,36 @@
 // JACK: Intellimouse(c) Mouse Wheel Support
 #define K_MWHEELUP 239
 #define K_MWHEELDOWN 240
+// erysdren: gamepad support
+#define K_GP_A 241
+#define K_GP_B 242
+#define K_GP_X 243
+#define K_GP_Y 244
+#define K_GP_BACK 245
+#define K_GP_GUIDE 246
+#define K_GP_START 247
+#define K_GP_LEFTSTICK 248
+#define K_GP_RIGHTSTICK 249
+#define K_GP_LEFTSHOULDER 250
+#define K_GP_RIGHTSHOULDER 251
+#define K_GP_DPAD_UP 252
+#define K_GP_DPAD_DOWN 253
+#define K_GP_DPAD_LEFT 254
+#define K_GP_DPAD_RIGHT 255
+#define K_GP_MISC1 256
+#define K_GP_PADDLE1 257
+#define K_GP_PADDLE2 258
+#define K_GP_PADDLE3 259
+#define K_GP_PADDLE4 260
+#define K_GP_TOUCHPAD 261
+// max
+#define K_MAX 262
 
 typedef enum { key_game, key_console, key_message, key_menu } keydest_t;
 
 extern keydest_t key_dest;
-extern char *keybindings[256];
-extern int key_repeats[256];
+extern char *keybindings[K_MAX];
+extern int key_repeats[K_MAX];
 extern int key_count; // incremented every key event
 extern int key_lastpress;
 

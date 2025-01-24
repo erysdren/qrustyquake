@@ -14,12 +14,12 @@ int edit_line = 0;
 int history_line = 0;
 keydest_t key_dest;
 int key_count; // incremented every key event
-char *keybindings[256];
-qboolean consolekeys[256]; // if true, can't be rebound while in console
-qboolean menubound[256]; // if true, can't be rebound while in menu
-int keyshift[256]; // key to map to if shift held down in console
-int key_repeats[256]; // if > 1, it is autorepeating
-qboolean keydown[256];
+char *keybindings[K_MAX];
+qboolean consolekeys[K_MAX]; // if true, can't be rebound while in console
+qboolean menubound[K_MAX]; // if true, can't be rebound while in menu
+int keyshift[K_MAX]; // key to map to if shift held down in console
+int key_repeats[K_MAX]; // if > 1, it is autorepeating
+qboolean keydown[K_MAX];
 char chat_buffer[32];
 qboolean team_message = false;
 
@@ -263,7 +263,7 @@ void Key_Unbind_f()
 
 void Key_Unbindall_f()
 {
-	for (int i = 0; i < 256; i++)
+	for (int i = 0; i < K_MAX; i++)
 		if (keybindings[i])
 			Key_SetBinding(i, "");
 }
@@ -303,7 +303,7 @@ void Key_Bind_f()
 
 void Key_WriteBindings(FILE *f) // Writes lines containing "bind key value"
 {
-	for (int i = 0; i < 256; i++)
+	for (int i = 0; i < K_MAX; i++)
 		if (keybindings[i] && *keybindings[i])
 			fprintf(f, "bind \"%s\" \"%s\"\n",
 				Key_KeynumToString(i), keybindings[i]);
@@ -332,7 +332,7 @@ void Key_Init()
 	consolekeys[K_MWHEELDOWN] = true;
 	consolekeys['`'] = false;
 	consolekeys['~'] = false;
-	for (int i = 0; i < 256; i++)
+	for (int i = 0; i < K_MAX; i++)
 		keyshift[i] = i;
 	for (int i = 'a'; i <= 'z'; i++)
 		keyshift[i] = i - 'a' + 'A';
