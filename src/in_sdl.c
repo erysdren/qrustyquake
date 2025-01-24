@@ -5,16 +5,30 @@ float mouse_x;
 float mouse_y;
 int mouse_oldbuttonstate;
 
+static SDL_GameController *controller = NULL;
+
+static SDL_GameController *find_controller(void)
+{
+	for (int i = 0; i < SDL_NumJoysticks(); i++)
+		if (SDL_IsGameController(i))
+			return SDL_GameControllerOpen(i);
+	return NULL;
+}
+
 void Sys_SendKeyEvents()
 {
 	SDL_Event event;
+	int sym, state, modstate;
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
+		case SDL_CONTROLLERBUTTONDOWN:
+		case SDL_CONTROLLERBUTTONUP:
+			state = event.cbutton.state;
 		case SDL_KEYDOWN:
 		case SDL_KEYUP:
-			int sym = event.key.keysym.sym;
-			int state = event.key.state;
-			int modstate = SDL_GetModState();
+			sym = event.key.keysym.sym;
+			state = event.key.state;
+			modstate = SDL_GetModState();
 			switch (sym) {
 			case SDLK_DELETE: sym = K_DEL; break;
 			case SDLK_BACKSPACE: sym = K_BACKSPACE; break;
@@ -161,6 +175,11 @@ void Sys_SendKeyEvents()
 			Host_ShutdownServer(false);
 			Sys_Quit();
 			break;
+		case SDL_CONTROLLERDEVICEADDED
+			if (!controller)
+				controller = SDL_GameControllerOpen(event.cdevice.which);
+			else
+				Con_DPrintf("New controller added, but ignored");
 		default:
 			break;
 		}
@@ -173,11 +192,15 @@ void IN_Init()
 		return;
 	mouse_x = mouse_y = 0.0;
 	mouse_avail = 1;
+
+	controller = find_controller();
 }
 
 void IN_Shutdown()
 {
 	mouse_avail = 0;
+	if (controller)
+		SDL_GameControllerClose(controller);
 }
 
 void IN_Commands()
