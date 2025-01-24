@@ -21,9 +21,40 @@ void Sys_SendKeyEvents()
 	int sym, state, modstate;
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
+		// erysdren: gamepad support
 		case SDL_CONTROLLERBUTTONDOWN:
 		case SDL_CONTROLLERBUTTONUP:
+			if (event.cdevice.which != SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(controller)))
+				break;
+			sym = event.cbutton.button;
 			state = event.cbutton.state;
+			switch (sym) {
+			case SDL_CONTROLLER_BUTTON_A: sym = K_GP_A; break;
+			case SDL_CONTROLLER_BUTTON_B: sym = K_GP_B; break;
+			case SDL_CONTROLLER_BUTTON_X: sym = K_GP_X; break;
+			case SDL_CONTROLLER_BUTTON_Y: sym = K_GP_Y; break;
+			case SDL_CONTROLLER_BUTTON_BACK: sym = K_GP_BACK; break;
+			case SDL_CONTROLLER_BUTTON_GUIDE: sym = K_GP_GUIDE; break;
+			case SDL_CONTROLLER_BUTTON_START: sym = K_GP_START; break;
+			case SDL_CONTROLLER_BUTTON_LEFTSTICK: sym = K_GP_LEFTSTICK; break;
+			case SDL_CONTROLLER_BUTTON_RIGHTSTICK: sym = K_GP_RIGHTSTICK; break;
+			case SDL_CONTROLLER_BUTTON_LEFTSHOULDER: sym = K_GP_LEFTSHOULDER; break;
+			case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER: sym = K_GP_RIGHTSHOULDER; break;
+			case SDL_CONTROLLER_BUTTON_DPAD_UP: sym = K_GP_DPAD_UP; break;
+			case SDL_CONTROLLER_BUTTON_DPAD_DOWN: sym = K_GP_DPAD_DOWN; break;
+			case SDL_CONTROLLER_BUTTON_DPAD_LEFT: sym = K_GP_DPAD_LEFT; break;
+			case SDL_CONTROLLER_BUTTON_DPAD_RIGHT: sym = K_GP_DPAD_RIGHT; break;
+			case SDL_CONTROLLER_BUTTON_MISC1: sym = K_GP_MISC1; break;
+			case SDL_CONTROLLER_BUTTON_PADDLE1: sym = K_GP_PADDLE1; break;
+			case SDL_CONTROLLER_BUTTON_PADDLE2: sym = K_GP_PADDLE2; break;
+			case SDL_CONTROLLER_BUTTON_PADDLE3: sym = K_GP_PADDLE3; break;
+			case SDL_CONTROLLER_BUTTON_PADDLE4: sym = K_GP_PADDLE4; break;
+			case SDL_CONTROLLER_BUTTON_TOUCHPAD: sym = K_GP_TOUCHPAD; break;
+			}
+			if (sym >= K_MAX)
+				sym = 0;
+			Key_Event(sym, state);
+			break;
 		case SDL_KEYDOWN:
 		case SDL_KEYUP:
 			sym = event.key.keysym.sym;
@@ -144,9 +175,9 @@ void Sys_SendKeyEvents()
 			case SDLK_KP_ENTER: sym = SDLK_RETURN; break;
 			case SDLK_KP_EQUALS: sym = SDLK_EQUALS; break;
 			}
-		// If we're not directly handled and still above 255
+		// If we're not directly handled and still above K_MAX
 		// just force it to 0
-		if (sym > 255)
+		if (sym >= K_MAX)
 			sym = 0;
 		Key_Event(sym, state);
 		break;
@@ -175,11 +206,17 @@ void Sys_SendKeyEvents()
 			Host_ShutdownServer(false);
 			Sys_Quit();
 			break;
-		case SDL_CONTROLLERDEVICEADDED
+		case SDL_CONTROLLERDEVICEADDED:
 			if (!controller)
 				controller = SDL_GameControllerOpen(event.cdevice.which);
-			else
-				Con_DPrintf("New controller added, but ignored");
+			break;
+		case SDL_CONTROLLERDEVICEREMOVED:
+			if (controller && event.cdevice.which == SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(controller)))
+			{
+				SDL_GameControllerClose(controller);
+				controller = find_controller();
+			}
+			break;
 		default:
 			break;
 		}
