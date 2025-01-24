@@ -14,12 +14,14 @@
 #include <io.h>
 #else
 #include <unistd.h>
+#ifndef __PSP__
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
-#include <sys/time.h>
 #include <sys/mman.h>
+#endif
+#include <sys/time.h>
 #endif
 #include <stdbool.h>
 #include <signal.h>

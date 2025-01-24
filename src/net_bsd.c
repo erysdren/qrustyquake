@@ -3,7 +3,9 @@
 #include "net_sys.h"
 #include "quakedef.h"
 #include "net_defs.h"
+#ifndef __PSP__
 #include "net_dgrm.h"
+#endif
 #include "net_loop.h"
 
 net_driver_t net_drivers[] = {
@@ -22,6 +24,7 @@ net_driver_t net_drivers[] = {
 	 Loop_Close,
 	 Loop_Shutdown },
 
+#ifndef __PSP__
 	{ "Datagram",
 	 0,
 	 Datagram_Init,
@@ -36,8 +39,13 @@ net_driver_t net_drivers[] = {
 	 Datagram_CanSendUnreliableMessage,
 	 Datagram_Close,
 	 Datagram_Shutdown }
+#endif
 };
 const int net_numdrivers = Q_COUNTOF(net_drivers);
+#ifdef __PSP__
+net_landriver_t net_landrivers[1];
+const int net_numlandrivers = 0;
+#else
 #include "net_udp.h"
 net_landriver_t net_landrivers[] = {
 	{ "UDP",
@@ -63,3 +71,4 @@ net_landriver_t net_landrivers[] = {
 	 UDP_SetSocketPort }
 };
 const int net_numlandrivers = Q_COUNTOF(net_landrivers);
+#endif

@@ -26,7 +26,7 @@ SDL_Rect destRect;
 SDL_Surface *scaleBuffer;
 SDL_Surface *screen;
 unsigned int force_old_render;
-unsigned int SDLWindowFlags;
+Uint32 SDLWindowFlags;
 unsigned int stretchpixels;
 unsigned int uiscale;
 unsigned int vimmode;

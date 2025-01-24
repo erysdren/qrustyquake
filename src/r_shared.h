@@ -58,8 +58,8 @@ typedef struct surf_s
 
 typedef struct edge_s
 {
-	long u;
-	long u_step;
+	uint64_t u;
+	uint64_t u_step;
 	struct edge_s *prev, *next;
 	unsigned short surfs[2];
 	struct edge_s *nextremove;
