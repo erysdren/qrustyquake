@@ -4,6 +4,7 @@ src/qrustyquake.exe
 src/SDL2.dll
 src/id1
 src/tags
+src/qrustyquake.desktop
 
 # Prerequisites
 *.d

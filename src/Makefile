@@ -25,6 +25,8 @@ BUILD_TYPE ?= release
 DEBUG_FLAGS = -g -O0
 RELEASE_FLAGS = -O3
 
+BINDIR?=/usr/local/bin/
+
 ifeq ($(BUILD_TYPE), debug)
 	CFLAGS += $(DEBUG_FLAGS)
 else
@@ -46,4 +48,11 @@ release:
 	$(MAKE) BUILD_TYPE=release
 
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJS) $(TARGET) qrustyquake.desktop
+
+install-xdg: install
+	sed "s/@TARGET@/$(TARGET)/g" ../misc/qrustyquake.desktop.in > qrustyquake.desktop
+	xdg-desktop-menu install --novendor qrustyquake.desktop
+
+install: $(TARGET)
+	install -v -D -C -m 755 -t $(BINDIR) $(TARGET)

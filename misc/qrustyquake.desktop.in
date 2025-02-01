@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Qrusty Quake
+Comment=A modernized WinQuake port using SDL2
+Exec=@TARGET@ %f
+Type=Application
+Categories=Game;ActionGame;
+Keywords=first;person;shooter;fps;3d;quake;
