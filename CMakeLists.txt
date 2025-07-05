@@ -1,12 +1,22 @@
 cmake_minimum_required(VERSION 3.22)
 project(qrustyquake LANGUAGES C HOMEPAGE_URL "https://github.com/cyanbun96/qrustyquake/" VERSION 0.5.1)
 
-find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
+if(EMSCRIPTEN)
+	find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-static)
+else()
+	find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
+endif()
 
 file(GLOB QRUSTYQUAKE_HEADERS "${PROJECT_SOURCE_DIR}/src/*.h")
 file(GLOB QRUSTYQUAKE_SOURCES "${PROJECT_SOURCE_DIR}/src/*.c")
 
 add_executable(qrustyquake)
+
+if(EMSCRIPTEN)
+	target_compile_definitions(qrustyquake PRIVATE EMSCRIPTEN=1)
+	target_link_options(qrustyquake PRIVATE -sALLOW_MEMORY_GROWTH=1 -sINITIAL_MEMORY=1gb -sSTACK_SIZE=10mb)
+	target_link_options(qrustyquake PRIVATE --preload-file id1/pak0.pak)
+endif()
 
 if(WIN32 OR MSVC OR CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	list(FILTER QRUSTYQUAKE_SOURCES EXCLUDE REGEX "net_udp.c")
@@ -27,4 +37,8 @@ target_link_libraries(qrustyquake PRIVATE SDL3::SDL3)
 find_library(libmath m)
 if(libmath)
 	target_link_libraries(qrustyquake PRIVATE ${libmath})
+endif()
+
+if(EMSCRIPTEN)
+	file(COPY ${PROJECT_SOURCE_DIR}/emscripten/index.html DESTINATION ${PROJECT_BINARY_DIR})
 endif()
